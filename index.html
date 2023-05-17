@@ -12,27 +12,25 @@
   <body>
     <div id="root"></div>
     <script type="text/babel" data-type="module" >
+      const { useState , useEffect } = React
+
+      const Main = () => {
+      const [datas,setDatas] = useState(null)
       
-      const App = ({text,className}) => {
+      useEffect(() => {
+      fetch('https://randomuser.me/api/?inc=gender,name,email,picture&results=20&noinfo')
+      .then(res => res.json())
+      .then(data => setDatas(data))
+      .catch(error => console-log(error));
+      })
+
         return(
-          <p class={className}>{text}</p>
+          <ul>
+            {data}
+          </ul>
         )
       }
 
-      class Main extends React.Component {
-        render() {
-          return(
-            <React.Fragment>
-              <h1>Hello World!</h1>
-              <App text="Hello!" className="1"/>
-              
-              <App text="Hello!!" className="2" />
-              
-              <App text="Hello!!!" className="3" />
-            </React.Fragment>
-          )
-        }
-      }
       ReactDOM.render(<Main />,document.getElementById('root'));
 
     </script>
