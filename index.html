@@ -14,59 +14,74 @@
     <script type="text/babel" data-type="module" >
       const { useState } = React
 
-      const Tarea = ({text,pos,handleEliminar}) => {
+      const Tarea = ({text,id,handleEliminar,productsMode,handleChange}) => {
         
         const [isCompleted, setIsCompleted] = useState(false);
-        
-        console.log(isCompleted)
 
         return(
           <div>
             <p className={isCompleted ? 'tarea completada' : 'tarea'}>{text}</p>
-            <button onClick={() => setIsCompleted(true)}>Terminar</button>
-            <button onClick={() => handleEliminar(text,pos)}>Eliminar</button>
+            <input type="number" className={productsMode ? "inputNumber" : "hide"} onChange={(e)=>{
+              handleChange(parseInt(e.target.value));
+              console.log(e.target.value)
+            }}></input>
+            <button className={productsMode ? "hide" : "botonTerminar"} onClick={() => setIsCompleted(!isCompleted)}>Terminar</button>
+            <button onClick={() => handleEliminar(text,id)}>Eliminar</button>
           </div>
         )
       }
 
       const FormElementoNuevo = ({labelText,defaultText,buttonHandler}) => {
-        let tareaValue = defaultText
-      
+        const [tareaValue,setTareaValue] =  useState("")
         return(
         <form>
         <label>{labelText}</label>
-        <input type="text" defaultValue={defaultText} onChange={(e)=>{
-          tareaValue = e.target.value;
-        console.log(tareaValue)
+        <input type="text" placeholder={defaultText} value={tareaValue} onChange={(e)=>{
+          setTareaValue(e.target.value)
       }} ></input>
-        <button type='button' onClick={()=>{buttonHandler(tareaValue)}}>Agregar</button>
+        <button type='button' onClick={()=>{
+          if(tareaValue) {
+          buttonHandler(tareaValue)
+          setTareaValue("")
+          }
+        }}>Agregar</button>
         </form>
         )
       } 
 
-      const List = () => {
-        
-        const [tareas, setTareas] = useState([
-          "Esta es una tarea",
-          "Esta es una tarea también",
-          "Dormir la siesta",
-        ]);
-        
+      const ListaDeTareas = () => {     
+        const [productsMode,setProductsMode] = useState(false)
+        const [tareas, setTareas] = useState([]);
+        const [products, setProducts] = useState([]);
+        const [sumaTotal, setSumaTotal] = useState([0])
+        const [total, setTotal] = useState([0]);
+      
         const agregarTarea = (tarea) => {
-          setTareas([...tareas,tarea])
+          setTareas([...tareas,{text : tarea, id : tareas.length}])
+        }
+        const agregarProducto = (product) => {
+          setProducts([...products,{text : product, id : products.length}])
+        }
+        const eliminarTarea = (text,id) => {
+          setTareas(tareas.filter((tarea) => tarea.text+tarea.id != text+id))
+        }
+        const eliminarProducto = (text,id) => {
+          setProducts(products.filter((product) => product.text+product.id != text+id))
         }
 
-        const eliminarTarea = (text,pos) => {
-          setTareas(tareas.filter((tarea, index) => tarea+index != text+pos))
+        const agregarSuma = (num) => {
+          setSumaTotal([...sumaTotal,num]);
+          setTotal(sumaTotal.reduce((a, b) => a + b, 0))
         }
 
-        console.log(tareas)
         return(
         <React.Fragment>
         <ul>
-            {tareas.map((tarea,index)=>(<li key={tarea + index}><Tarea text={tarea} pos={index} handleEliminar={eliminarTarea}  /></li>))}
+            {productsMode ? products.map((product)=>(<li key={product.text+product.id }><Tarea text={product.text} id={product.id} handleEliminar={eliminarProducto} productsMode={productsMode} handleChange={agregarSuma}/></li>)) : tareas.map((tarea)=>(<li key={tarea.text+tarea.id }><Tarea text={tarea.text} id={tarea.id} handleEliminar={eliminarTarea} productsMode={productsMode} /></li>))}
         </ul>
-        <FormElementoNuevo labelText="Agrega una Tarea" defaultText="Tomar una siesta" buttonHandler={agregarTarea} />
+        <FormElementoNuevo labelText={ productsMode ? "Agrega un producto" : "Agrega una Tarea"} defaultText={productsMode ? "Mayonesa" : "Tomar una siesta"} buttonHandler={productsMode ? agregarProducto : agregarTarea} />
+        <div className={productsMode ? "total" : "hide"}>TOTAL: <strong>{total}</strong></div>
+        <button onClick={()=>{setProductsMode(!productsMode)}}>{ productsMode ? "Lista de Tareas" : "Lista de Productos"}</button>
         </React.Fragment>
         )
       }
@@ -75,7 +90,7 @@
       const Main = () => {
         return(
           <div>
-            <List />
+            <ListaDeTareas />
           </div>
         )
       }
