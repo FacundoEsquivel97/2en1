@@ -12,22 +12,71 @@
   <body>
     <div id="root"></div>
     <script type="text/babel" data-type="module" >
-      const { useState , useEffect } = React
+      const { useState } = React
 
-      const Main = () => {
-      const [datas,setDatas] = useState(null)
-      
-      useEffect(() => {
-      fetch('https://randomuser.me/api/?inc=gender,name,email,picture&results=20&noinfo')
-      .then(res => res.json())
-      .then(data => setDatas(data))
-      .catch(error => console-log(error));
-      })
+      const Tarea = ({text,pos,handleEliminar}) => {
+        
+        const [isCompleted, setIsCompleted] = useState(false);
+        
+        console.log(isCompleted)
 
         return(
-          <ul>
-            {data}
-          </ul>
+          <div>
+            <p className={isCompleted ? 'tarea completada' : 'tarea'}>{text}</p>
+            <button onClick={() => setIsCompleted(true)}>Terminar</button>
+            <button onClick={() => handleEliminar(text,pos)}>Eliminar</button>
+          </div>
+        )
+      }
+
+      const FormElementoNuevo = ({labelText,defaultText,buttonHandler}) => {
+        let tareaValue = defaultText
+      
+        return(
+        <form>
+        <label>{labelText}</label>
+        <input type="text" defaultValue={defaultText} onChange={(e)=>{
+          tareaValue = e.target.value;
+        console.log(tareaValue)
+      }} ></input>
+        <button type='button' onClick={()=>{buttonHandler(tareaValue)}}>Agregar</button>
+        </form>
+        )
+      } 
+
+      const List = () => {
+        
+        const [tareas, setTareas] = useState([
+          "Esta es una tarea",
+          "Esta es una tarea también",
+          "Dormir la siesta",
+        ]);
+        
+        const agregarTarea = (tarea) => {
+          setTareas([...tareas,tarea])
+        }
+
+        const eliminarTarea = (text,pos) => {
+          setTareas(tareas.filter((tarea, index) => tarea+index != text+pos))
+        }
+
+        console.log(tareas)
+        return(
+        <React.Fragment>
+        <ul>
+            {tareas.map((tarea,index)=>(<li key={tarea + index}><Tarea text={tarea} pos={index} handleEliminar={eliminarTarea}  /></li>))}
+        </ul>
+        <FormElementoNuevo labelText="Agrega una Tarea" defaultText="Tomar una siesta" buttonHandler={agregarTarea} />
+        </React.Fragment>
+        )
+      }
+
+
+      const Main = () => {
+        return(
+          <div>
+            <List />
+          </div>
         )
       }
 
