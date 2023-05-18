@@ -17,14 +17,19 @@
       const Tarea = ({text,id,handleEliminar,productsMode,handleChange}) => {
         
         const [isCompleted, setIsCompleted] = useState(false);
-
+																				const [precio, setPrecio] = useState(0)
         return(
           <div>
             <p className={isCompleted ? 'tarea completada' : 'tarea'}>{text}</p>
-            <input type="number" className={productsMode ? "inputNumber" : "hide"} onChange={(e)=>{
-              handleChange(parseInt(e.target.value));
-              console.log(e.target.value)
+            <form className={productsMode ? "formPrecio" : "hide"}>
+            <input type="number" onChange={(e)=>{
+              setPrecio(e.target.value)
             }}></input>
+            <button onClick={(e)=>{
+              e.preventDefault();
+              handleChange(precio)
+            }}>Aceptar</button>
+          </form>
             <button className={productsMode ? "hide" : "botonTerminar"} onClick={() => setIsCompleted(!isCompleted)}>Terminar</button>
             <button onClick={() => handleEliminar(text,id)}>Eliminar</button>
           </div>
