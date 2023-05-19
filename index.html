@@ -52,7 +52,7 @@
         const [tareas, setTareas] = useState(tareasLocalStorage);
         const [products, setProducts] = useState(productosLocalStorage);
         const [inputValue,setInputValue] =  useState("")
-        let total = products.reduce((acumulador, actual) => parseInt(acumulador) + parseInt(actual.precio), 0);
+        let total = products ? products.reduce((acumulador, actual) => parseInt(acumulador) + parseInt(actual.precio), 0) : 0
         console.log(total)
 
         
