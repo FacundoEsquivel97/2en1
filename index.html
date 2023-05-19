@@ -14,16 +14,16 @@
     <script type="text/babel" data-type="module" >
       const { useState } = React
 
-      const Tarea = ({text,id,handleEliminar,productsMode,sendPrecio}) => {
+      const Tarea = ({text,id,handleEliminar,productsMode,sendPrecio,completed,sendCompleted,price}) => {
         
-        const [isCompleted, setIsCompleted] = useState(false);
-        const [precio, setPrecio] = useState(0)
+        const [isCompleted, setIsCompleted] = useState(completed);
+        const [precio, setPrecio] = useState(price)
 
         return(
           <div>
             <p className={isCompleted ? 'tarea completada' : 'tarea'}>{text}</p>
             <form className={productsMode ? "formPrecio" : "hide"}>
-            <input type="number" onChange={(e)=>{
+            <input type="number" defaultValue={price} onChange={(e)=>{
               setPrecio(e.target.value)
             }}></input>
             <button onClick={(e)=>{
@@ -31,45 +31,73 @@
               sendPrecio(text,id,precio)
             }}>Aceptar</button>
           </form>
-            <button className={productsMode ? "hide" : "botonTerminar"} onClick={() => setIsCompleted(!isCompleted)}>Terminar</button>
+            <button className={productsMode ? "hide" : "botonTerminar"} onClick={() => {
+              setIsCompleted(!isCompleted);
+              sendCompleted(text,id,!isCompleted)
+            }}>Terminar</button>
             <button onClick={() => handleEliminar(text,id,precio)}>Eliminar</button>
           </div>
         )
       }
 
       const ListaDeTareas = () => {     
-        const [productsMode,setProductsMode] = useState(false)
-        const [tareas, setTareas] = useState([]);
-        const [products, setProducts] = useState([]);
-        const [inputValue,setInputValue] =  useState("")
-        const [total,setTotal] = useState(0)
+        
+        let tareasLocalStorage = localStorage.getItem("tareas") == 'undefined' ? [] : JSON.parse(localStorage.getItem("tareas"));
+        let productosLocalStorage = localStorage.getItem("productos") == 'null' ? [] : JSON.parse(localStorage.getItem("productos"));
+        
 
+        console.log(productosLocalStorage)
+
+        const [productsMode,setProductsMode] = useState(false)
+        const [tareas, setTareas] = useState(tareasLocalStorage);
+        const [products, setProducts] = useState(productosLocalStorage);
+        const [inputValue,setInputValue] =  useState("")
+        let total = products.reduce((acumulador, actual) => parseInt(acumulador) + parseInt(actual.precio), 0);
+        console.log(total)
+
+        
+        tareasLocalStorage = tareas;
+        localStorage.setItem("tareas", JSON.stringify(tareasLocalStorage))
+        
+        productosLocalStorage = products;
+        localStorage.setItem("productos", JSON.stringify(productosLocalStorage))
+
+        
         const agregarTarea = (tarea) => {
-          setTareas([...tareas,{text : tarea, id : tareas.length}])
+          setTareas([...tareas,{text : tarea, id : tareas.length, isCompleted:false}]);;
         }
         const agregarProducto = (product) => {
-          setProducts([...products,{text : product, id : products.length, precio : 0}])
+          setProducts([...products,{text : product, id : products.length, precio : 0}]);
         }
         const eliminarTarea = (text,id) => {
           setTareas(tareas.filter((tarea) => tarea.text+tarea.id != text+id))
         }
         const eliminarProducto = (text,id,precio) => {
           setProducts(products.filter((product) => product.text+product.id != text+id))
-          setTotal((totalprev) => parseInt(totalprev) - parseInt(precio))
         }
         const guardarPrecio = (text,id,num) => {
           setProducts(products.map((e)=>{if(e.text+e.id == text+id){
-            setTotal((totalprev) => parseInt(totalprev) - parseInt(e.precio))
             return ({text : e.text, id : e.id, precio : num})
           } else { 
             return ({text : e.text, id : e.id, precio : e.precio})
           } }));
-          setTotal((totalprev) => parseInt(totalprev) + parseInt(num))
         }
+
+        const guardarCompleted = (text,id,completed) => {
+          setTareas(tareas.map((e)=>{if(e.text+e.id == text+id){
+            return {text : e.text, id : e.id, isCompleted: completed}
+          } else { 
+            return {text : e.text, id : e.id, isCompleted : e.isCompleted}
+          } }));
+        }
+
+        console.log(tareasLocalStorage)
+        
         return(
         <React.Fragment>
         <ul>
-            {productsMode ? products.map((product)=>(<li key={product.text+product.id }><Tarea text={product.text} id={product.id} handleEliminar={eliminarProducto} productsMode={productsMode} sendPrecio={guardarPrecio} precio={product.precio}/></li>)) : tareas.map((tarea)=>(<li key={tarea.text+tarea.id }><Tarea text={tarea.text} id={tarea.id} handleEliminar={eliminarTarea} productsMode={productsMode} /></li>))}
+            {productsMode ? products.map((product)=>(<li key={product.text+product.id }><Tarea text={product.text} id={product.id} handleEliminar={eliminarProducto} productsMode={productsMode} sendPrecio={guardarPrecio} price={product.precio}/></li>)) 
+            : tareas.map((tarea)=>(<li key={tarea.text+tarea.id }><Tarea text={tarea.text} id={tarea.id} handleEliminar={eliminarTarea} productsMode={productsMode} completed={tarea.isCompleted} sendCompleted={guardarCompleted} /></li>))}
         </ul>
         <form onSubmit={(e)=>{
           e.preventDefault();
