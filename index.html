@@ -14,6 +14,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <footer class="footer"><div>Facundo Esquivel</div><div class="links"><a href="https://www.linkedin.com/in/facundo-esquivel-38ab7b223/" target="_blank">LinkedIn</a><a href="https://github.com/FacundoEsquivel97" target="_blank">GitHub</a></div></footer>
     <script type="text/babel" data-type="module" >
       const { useState } = React
 
@@ -97,13 +98,15 @@
             {productsMode ? products.map((product)=>(<li key={product.text+product.id }><Tarea text={product.text} id={product.id} handleEliminar={eliminarProducto} productsMode={productsMode} sendPrecio={guardarPrecio} price={product.precio}/></li>)) 
             : tareas.map((tarea)=>(<li key={tarea.text+tarea.id }><Tarea text={tarea.text} id={tarea.id} handleEliminar={eliminarTarea} productsMode={productsMode} completed={tarea.isCompleted} sendCompleted={guardarCompleted} /></li>))}
         </ul>
+        <div className={productsMode ? "total" : "hide"}>TOTAL: <strong>{total}</strong></div>
         <form
           className="formulario" 
           onSubmit={(e)=>{
           e.preventDefault();
           if(inputValue) {productsMode ? agregarProducto(inputValue) : agregarTarea(inputValue)} 
           setInputValue("")}}>
-          <label className="formLabel">{productsMode ? "Agrega un producto" : "Agrega una Tarea"}</label>
+          <label className="formLabel">{productsMode ? "Agrega un Producto" : "Agrega una Tarea"}</label>
+          <div className="formContainer">
           <input
               className="inputForm"
               type="text" 
@@ -112,8 +115,8 @@
               onChange={(e)=>{setInputValue(e.target.value)}}>
           </input>
           <button className="buttonForm" type="submit">+ Agrega un nuevo item a la lista</button>
-        <div className={productsMode ? "total" : "hide"}>TOTAL: <strong>{total}</strong></div>
-        <button className="botonModo" onClick={()=>{setProductsMode(!productsMode)}}>{ productsMode ? "Lista de Tareas" : "Lista de Productos"}</button>
+          </div>
+           <button className="botonModo" onClick={()=>{setProductsMode(!productsMode)}}>{ productsMode ? "Lista de Tareas" : "Lista de Productos"}</button>
         </form>
         </React.Fragment>
         )
