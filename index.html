@@ -37,12 +37,14 @@
             }}>+</button>
           </form>
           </div>
+          <div className="containerButtons">
             <button className={productsMode ? "hide" : "botonTerminar"} onClick={() => {
               setIsCompleted(!isCompleted);
               sendCompleted(text,id,!isCompleted)
             }}>Terminar</button>
             <button className="botonEliminar" onClick={() => handleEliminar(text,id,precio)}>Eliminar</button>
           </div>
+            </div>
         )
       }
 

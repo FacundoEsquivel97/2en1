@@ -1,7 +1,7 @@
 body {
     font-family: 'Open Sans', sans-serif;
-    background-color: hsl(228, 100%, 70%);
-    color: #fcfcfc;
+    background-color: #222;
+    color: #f0f0f0;
     padding: 0;
     margin: 0;
     overflow-x: hidden;
@@ -9,15 +9,15 @@ body {
 
 button {
     border: none;
-    border-radius: 1rem;
-    background-color: #dce3ff;
-    color: #122a89;
+    border-radius: 15px;
+    background-color: #f0f0f0;
+    color: #222;
     box-sizing: border-box;    
     transition: background-color 0.3s;
     transition: border 0.3s;
 }
 button:active {
-    background-color: #fcfcfc;
+    background-color: #f0f0f0;
     border: 1px solid #122a89;
     
 }
@@ -73,7 +73,7 @@ p {
     gap: 1rem;
     padding: 1rem 3rem;
     color: #222;
-    background-color: #fcfcfc;
+    background-color: #f0f0f0;
     border-radius: 2rem;
 }
 .tareaText {
@@ -83,11 +83,18 @@ p {
     font-size: calc(2rem + 1vw);
     text-align: start;
     padding: 1rem;
+    border: 1px solid #222;
 }
 .botonEliminar {
     font-size: calc(2rem + 1vw);
     text-align: start;
     padding: 1rem;
+    border: 1px solid #222;
+}
+.containerButtons{
+    display: flex;
+    gap: 1rem;
+    justify-content: end;
 }
 .botonModo {
     font-size: calc(2rem + 1vw) ;
@@ -127,15 +134,19 @@ p {
 .footer {
     font-size: calc(1rem + 1vw) ;
     font-weight: bold;
-    background-color: #fcfcfc;
+    background-color: #f0f0f0;
     color: #222;
     padding: 1.5rem;
     display:flex;
     justify-content: space-around;
-    width: 100%;
 }
 .links{
     display: flex;
+    gap: 1rem;
+}
+.formContainer{
+    display:flex;
+    flex-direction: column;
     gap: 1rem;
 }
 @media (min-width: 1000px) {
@@ -151,8 +162,8 @@ p {
     }
     button:hover {
         cursor: pointer;
-        color: #222;
-        background-color: transparent;
+        color: #f0f0f0;
+        background-color: #222;
     }
     .tarea {
         flex-direction: row;
@@ -171,10 +182,10 @@ p {
         width: 22rem;
     }
     .buttonForm:hover {
-        color: #fcfcfc;
+        color: #f0f0f0;
     }
     .botonModo:hover {
-        color: #fcfcfc;
+        color: #f0f0f0;
     }
     .inputForm {
         width: 100%;
