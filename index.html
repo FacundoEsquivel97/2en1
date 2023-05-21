@@ -42,18 +42,18 @@
 
       const ListaDeTareas = () => {     
         
-        let tareasLocalStorage = localStorage.getItem("tareas") == 'undefined' ? [] : JSON.parse(localStorage.getItem("tareas"));
-        let productosLocalStorage = localStorage.getItem("productos") == 'null' ? [] : JSON.parse(localStorage.getItem("productos"));
+        let tareasLocalStorage = localStorage.getItem("tareas") == null || localStorage.getItem("tareas") == undefined ? [] : JSON.parse(localStorage.getItem("tareas"));
+        let productosLocalStorage = localStorage.getItem("productos") == null || localStorage.getItem("productos") == undefined  ? [] : JSON.parse(localStorage.getItem("productos"));
         
 
-        console.log(productosLocalStorage)
+        console.log(productosLocalStorage + ' productosLocalStorage')
 
         const [productsMode,setProductsMode] = useState(false)
         const [tareas, setTareas] = useState(tareasLocalStorage);
         const [products, setProducts] = useState(productosLocalStorage);
         const [inputValue,setInputValue] =  useState("")
         let total = products != null ? products.reduce((acumulador, actual) => parseInt(acumulador) + parseInt(actual.precio), 0) : 0
-        console.log(total)
+        console.log(total + ' Total')
 
         
         tareasLocalStorage = tareas;
@@ -91,7 +91,7 @@
           } }));
         }
 
-        console.log(tareasLocalStorage)
+        console.log(tareasLocalStorage + ' tareasLocalStorage')
         
         return(
         <React.Fragment>
