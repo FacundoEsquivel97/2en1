@@ -3,7 +3,7 @@
 
 Esta web te permite guardar tus tareas pendientes y realizar una lista de compras! 2 Funciones en una web!
 
-Deployd: https://2en1.netlify.app/
+Deploy: https://2en1.netlify.app/
 
 # Descripción
 
